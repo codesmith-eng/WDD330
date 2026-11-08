@@ -1,30 +1,16 @@
 import { renderListWithTemplate } from "./utils.mjs";
 
-function productCardTemplate(product){
-    return `<li class="product-card">
-    <a href="product_pages/?product=${product.id}">
-      <img src="${product.image}" alt="Image of ${product.name}">
-      <h2 class="card__brand">${product.brand}</h2>
-      <h3 class="card__name">${product.name}</h3>
-      <p class="product-card__price">$${product.price.toFixed(2)}</p>
-    </a>
-  </li>`
-}
-
-export default class ProductList {
-  constructor(productCategory, dataSource,listElement) {
-    this.productCategory = productCategory;
-import { renderListWithTemplate, setImageFallback } from "./utils.mjs";
-
 function productCardTemplate(product) {
-  return `<li class="product-card">
-    <a href="/product_pages/?product=${product.Id}">
-      <img src="${product.Image}" alt="${product.Name}" />
-      <h3 class="card__brand">${product.Brand.Name}</h3>
-      <h2 class="card__name">${product.NameWithoutBrand}</h2>
-      <p class="product-card__price">$${product.FinalPrice}</p>
-    </a>
-  </li>`;
+  return `
+    <li class="product-card">
+      <a href="product_pages/?products=${product.Id}">
+        <img src="${product.Image}" alt="${product.Name}">
+        <h2>${product.Brand.Name}</h2>
+        <h3>${product.Name}</h3>
+        <p class="product-card__price">$${product.FinalPrice}</p>
+      </a>
+    </li>
+    `;
 }
 
 export default class ProductList {
@@ -39,28 +25,13 @@ export default class ProductList {
     this.renderList(list);
   }
 
-    renderList(list) {
-    renderListWithTemplate(productCardTemplate, this.listElement, list);
-  } 
-}  
-    if (!this.listElement) {
-      throw new Error(
-        `Could not find product list element for category: ${this.category}`,
-      );
-    }
-
-    const products = await this.dataSource.getData();
-    this.renderList(products);
-  }
-
   renderList(list) {
-    renderListWithTemplate(
-      productCardTemplate,
-      this.listElement,
-      list,
-      "afterbegin",
-      true,
-    );
-    setImageFallback(this.listElement);
+    // const htmlStrings = list.map(productCardTemplate);
+    // this.listElement.insertAdjacentHTML("afterbegin", htmlStrings.join(""));
+
+    // apply use new utility function instead of the commented code above
+    renderListWithTemplate(productCardTemplate, this.listElement, list);
+
   }
+
 }
