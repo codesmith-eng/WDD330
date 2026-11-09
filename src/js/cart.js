@@ -50,6 +50,13 @@ function renderCartContents() {
       cartFooter.classList.add("hide");
     }
   }
+  // 4. Add event listener to the remove item from cart
+  document.querySelectorAll(".remove-btn").forEach((button) => {
+    button.addEventListener("click", (event) => {
+      const productId = event.target.dataset.id;
+      removeFromCart(productId);
+    });
+  });    
 }
 
 function cartItemTemplate(item) {
@@ -65,8 +72,18 @@ function cartItemTemplate(item) {
     <p class="cart-card__color">${colorName}</p>
     <p class="cart-card__quantity">qty: 1</p>
     <p class="cart-card__price">$${item.FinalPrice}</p>
+    <button class="remove-btn" data-id="${item.Id}">Remove</button>
   </li>`;
 }
 
+function removeFromCart(productId) {
+  const cartItems = getLocalStorage("so-cart") || [];
+
+  const cart = cartItems.filter((item) => item.Id !== productId);
+
+  setLocalStorage("so-cart", cart);
+
+  renderCartContents();
+}
 // Run on page load
 renderCartContents();
