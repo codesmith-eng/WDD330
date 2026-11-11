@@ -1,4 +1,9 @@
-import { getLocalStorage, setLocalStorage, qs, renderListWithTemplate } from "./utils.mjs";
+import {
+  getLocalStorage,
+  setLocalStorage,
+  qs,
+  renderListWithTemplate,
+} from "./utils.mjs";
 
 function renderCartContents() {
   // 1. Pull cart items from localStorage (or seed them if empty for testing)
@@ -10,17 +15,19 @@ function renderCartContents() {
       {
         Id: "880RR",
         Name: "Marmot Ajax Tent - 3-Person, 3-Season",
-        Image: "../public/images/tents/marmot-ajax-tent-3-person-3-season-in-pale-pumpkin-terracotta~p~880rr_01~320.jpg",
+        Image:
+          "../public/images/tents/marmot-ajax-tent-3-person-3-season-in-pale-pumpkin-terracotta~p~880rr_01~320.jpg",
         FinalPrice: 199.99,
-        Colors: [{ ColorName: "Pale Pumpkin/Terracotta" }]
+        Colors: [{ ColorName: "Pale Pumpkin/Terracotta" }],
       },
       {
         Id: "985RF",
         Name: "The North Face Talus Tent - 4-Person, 3-Season",
-        Image: "../public/images/tents/the-north-face-talus-tent-4-person-3-season-in-golden-oak-saffron-yellow~p~985rf_01~320.jpg",
+        Image:
+          "../public/images/tents/the-north-face-talus-tent-4-person-3-season-in-golden-oak-saffron-yellow~p~985rf_01~320.jpg",
         FinalPrice: 199.99,
-        Colors: [{ ColorName: "Golden Oak/Saffron Yellow" }]
-      }
+        Colors: [{ ColorName: "Golden Oak/Saffron Yellow" }],
+      },
     ];
     setLocalStorage("so-cart", cartItems);
   }
@@ -29,7 +36,13 @@ function renderCartContents() {
 
   // 2. Render items using your utility function
   if (productListEl && cartItems.length > 0) {
-    renderListWithTemplate(cartItemTemplate, productListEl, cartItems, "afterbegin", true);
+    renderListWithTemplate(
+      cartItemTemplate,
+      productListEl,
+      cartItems,
+      "afterbegin",
+      true,
+    );
   }
 
   // 3. Handle total and footer visibility
@@ -37,7 +50,10 @@ function renderCartContents() {
   const cartTotal = qs(".cart-total");
 
   if (cartItems.length > 0) {
-    const total = cartItems.reduce((sum, item) => sum + Number(item.FinalPrice || 0), 0);
+    const total = cartItems.reduce(
+      (sum, item) => sum + Number(item.FinalPrice || 0),
+      0,
+    );
 
     if (cartTotal) {
       cartTotal.textContent = `Total: $${total.toFixed(2)}`;
@@ -56,11 +72,12 @@ function renderCartContents() {
       const productId = event.target.dataset.id;
       removeFromCart(productId);
     });
-  });    
+  });
 }
 
 function cartItemTemplate(item) {
-  const colorName = item.Colors && item.Colors[0] ? item.Colors[0].ColorName : "";
+  const colorName =
+    item.Colors && item.Colors[0] ? item.Colors[0].ColorName : "";
 
   return `<li class="cart-card divider">
     <a href="#" class="cart-card__image">
