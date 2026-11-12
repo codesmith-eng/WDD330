@@ -1,4 +1,6 @@
-import { getLocalStorage, setLocalStorage, qs, renderListWithTemplate } from "./utils.mjs";
+import { getLocalStorage, setLocalStorage, qs, renderListWithTemplate, loadHeaderFooter } from "./utils.mjs";
+
+loadHeaderFooter();
 
 function renderCartContents() {
   // 1. Pull cart items from localStorage (or seed them if empty for testing)
@@ -85,5 +87,6 @@ function removeFromCart(productId) {
 
   renderCartContents();
 }
+
 // Run on page load
 renderCartContents();
