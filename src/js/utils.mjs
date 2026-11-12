@@ -54,6 +54,16 @@ export async function loadTemplate(path) {
   return template;
 }
 
+// update the cart count badge in the header
+export function updateCartCount() {
+  const cartItems = getLocalStorage("so-cart") || [];
+  const countElement = document.querySelector(".cart-count");
+  if (countElement) {
+    const totalItems = cartItems.reduce((sum, item) => sum + (item.Quantity || 1), 0);
+    countElement.textContent = totalItems > 0 ? totalItems : "";
+  }
+}
+
 // load and render both the header and footer partials
 export async function loadHeaderFooter() {
   const headerTemplate = await loadTemplate("/partials/header.html");
@@ -62,6 +72,6 @@ export async function loadHeaderFooter() {
   const headerElement = document.querySelector("#main-header");
   const footerElement = document.querySelector("#main-footer");
 
-  renderWithTemplate(headerTemplate, headerElement);
+  renderWithTemplate(headerTemplate, headerElement, null, updateCartCount);
   renderWithTemplate(footerTemplate, footerElement);
 }

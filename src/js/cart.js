@@ -1,37 +1,20 @@
-import { getLocalStorage, setLocalStorage, qs, renderListWithTemplate, loadHeaderFooter } from "./utils.mjs";
+import { getLocalStorage, setLocalStorage, qs, renderListWithTemplate, loadHeaderFooter, updateCartCount } from "./utils.mjs";
 
 loadHeaderFooter();
 
 function renderCartContents() {
-  // 1. Pull cart items from localStorage (or seed them if empty for testing)
-  let cartItems = getLocalStorage("so-cart");
-
-  // If localStorage is completely empty, automatically seed the two tent products
-  if (!Array.isArray(cartItems) || cartItems.length === 0) {
-    cartItems = [
-      {
-        Id: "880RR",
-        Name: "Marmot Ajax Tent - 3-Person, 3-Season",
-        Image: "../public/images/tents/marmot-ajax-tent-3-person-3-season-in-pale-pumpkin-terracotta~p~880rr_01~320.jpg",
-        FinalPrice: 199.99,
-        Colors: [{ ColorName: "Pale Pumpkin/Terracotta" }]
-      },
-      {
-        Id: "985RF",
-        Name: "The North Face Talus Tent - 4-Person, 3-Season",
-        Image: "../public/images/tents/the-north-face-talus-tent-4-person-3-season-in-golden-oak-saffron-yellow~p~985rf_01~320.jpg",
-        FinalPrice: 199.99,
-        Colors: [{ ColorName: "Golden Oak/Saffron Yellow" }]
-      }
-    ];
-    setLocalStorage("so-cart", cartItems);
-  }
+  // 1. Pull cart items from localStorage (default to an empty array if none exist)
+  const cartItems = getLocalStorage("so-cart") || [];
 
   const productListEl = qs(".product-list");
 
-  // 2. Render items using your utility function
-  if (productListEl && cartItems.length > 0) {
-    renderListWithTemplate(cartItemTemplate, productListEl, cartItems, "afterbegin", true);
+  // 2. Render items using your utility function (or clear the list if empty)
+  if (productListEl) {
+    if (cartItems.length > 0) {
+      renderListWithTemplate(cartItemTemplate, productListEl, cartItems, "afterbegin", true);
+    } else {
+      productListEl.innerHTML = "";
+    }
   }
 
   // 3. Handle total and footer visibility
@@ -52,6 +35,7 @@ function renderCartContents() {
       cartFooter.classList.add("hide");
     }
   }
+
   // 4. Add event listener to the remove item from cart
   document.querySelectorAll(".remove-btn").forEach((button) => {
     button.addEventListener("click", (event) => {
@@ -86,6 +70,7 @@ function removeFromCart(productId) {
   setLocalStorage("so-cart", cart);
 
   renderCartContents();
+  updateCartCount();
 }
 
 // Run on page load
