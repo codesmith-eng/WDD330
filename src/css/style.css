@@ -270,3 +270,24 @@ footer {
 .cart-total {
   margin-left: 38em;
 }
+
+.cart {
+  position: relative;
+}
+
+.cart-count {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background-color: var(--primary-color, #f0a868);
+  color: var(--dark-grey, #303030);
+  font-size: 0.75rem;
+  font-weight: bold;
+  padding: 2px 6px;
+  border-radius: 50%;
+  line-height: 1;
+}
+
+.cart-count:empty {
+  display: none;
+}
