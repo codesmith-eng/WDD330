@@ -22,12 +22,21 @@ export default class ProductList {
     this.listElement = listElement;
   }
 
-  async init() {
-    const list = await this.dataSource.getData();
+  async init(searchTerm = "") {
+    console.log("init called from:");
+    console.trace();
+    let list = await this.dataSource.getData();
 
-    console.log("Number of products:", list.length);
-    console.log("Product IDs:", list.map((item) => item.Id));
+    console.log("Search term:", searchTerm);
+    console.log("First product:", list[0]);
 
+    if (searchTerm) {
+      list = list.filter(
+        (product) =>
+          product.Name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          product.NameWithoutBrand?.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    }
     this.renderList(list);
   }
 
