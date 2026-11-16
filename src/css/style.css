@@ -347,3 +347,38 @@ footer {
     animation: none;
   }
 }
+
+/* Category Grid on Home Page */
+.category-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  list-style: none;
+  padding: 1.5rem 0;
+  margin: 0;
+  text-align: center;
+}
+
+.category-grid a {
+  text-decoration: none;
+  color: inherit;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.category-grid img {
+  width: 80px;
+  height: 80px;
+}
+
+.category-grid h2 {
+  font-size: 1rem;
+  margin-top: 0.5rem;
+}
+
+@media screen and (max-width: 500px) {
+  .category-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
