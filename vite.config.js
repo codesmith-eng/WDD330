@@ -1,3 +1,4 @@
+
 import { resolve } from "path";
 import { defineConfig } from "vite";
 
@@ -12,6 +13,9 @@ export default defineConfig({
         cart: resolve(__dirname, "src/cart/index.html"),
         checkout: resolve(__dirname, "src/checkout/index.html"),
         product: resolve(__dirname, "src/product_pages/index.html"),
+
+        // Include the product listing page in the build.
+        productListing: resolve(__dirname, "src/product_listing/index.html"),
       },
     },
   },
