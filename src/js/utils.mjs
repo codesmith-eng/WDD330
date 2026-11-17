@@ -2,6 +2,8 @@
 export function qs(selector, parent = document) {
   return parent.querySelector(selector);
 }
+// or a more concise version if you are into that sort of thing:
+// export const qs = (selector, parent = document) => parent.querySelector(selector);
 
 // retrieve data from localstorage
 export function getLocalStorage(key) {
@@ -50,31 +52,6 @@ async function loadTemplate(path) {
   return template;
 }
 
-// update the cart count badge in the header
-export function updateCartCount() {
-  const cartItems = getLocalStorage("so-cart") || [];
-  const countElement = document.querySelector(".cart-count");
-  if (countElement) {
-    const totalItems = cartItems.reduce((sum, item) => sum + (item.Quantity || 1), 0);
-    countElement.textContent = totalItems > 0 ? totalItems : "";
-  }
-}
-
-// play a short bounce animation on the cart icon in the header
-export function animateCart() {
-  const cartIcon = document.querySelector(".cart");
-  // the header loads asynchronously, so the icon may not exist yet
-  if (!cartIcon) return;
-
-  // remove the class first so the animation can replay on repeated clicks
-  cartIcon.classList.remove("cart--adding");
-  // reading offsetWidth forces a reflow, which commits the removal
-  // Without this the browser batches
-  void cartIcon.offsetWidth;
-  cartIcon.classList.add("cart--adding");
-}
-
-// load and render both the header and footer partials
 export async function loadHeaderFooter() {
   const headerTemplate = await loadTemplate("../partials/header.html");
   const footerTemplate = await loadTemplate("../partials/footer.html");
