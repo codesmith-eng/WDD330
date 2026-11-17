@@ -33,22 +33,25 @@ export default class ProductList {
     this.listElement = listElement;
   }
 
-  async init(searchTerm = "") {
-    console.log("init called from:");
-    console.trace();
-    let list = await this.dataSource.getData();
+  
+async init() {
+  // Get the products from the data source.
+  this.products = await this.dataSource.getData(this.category);
 
-    console.log("Search term:", searchTerm);
-    console.log("First product:", list[0]);
+  // Display the products in their original order.
+  this.renderList(this.products);
 
-    if (searchTerm) {
-      list = list.filter(
-        (product) =>
-          product.Name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          product.NameWithoutBrand?.toLowerCase().includes(searchTerm.toLowerCase())
-      );
-    }
-    this.renderList(list);
+  // Display the category title.
+  document.querySelector(".title").textContent = this.category;
+
+  // Find the sorting dropdown.
+  const sortSelect = document.querySelector("#sort-products");
+
+  // Sort the products whenever the selection changes.
+  if (sortSelect) {
+    sortSelect.addEventListener("change", () => {
+      this.sortList(sortSelect.value);
+    });
   }
 }
 
