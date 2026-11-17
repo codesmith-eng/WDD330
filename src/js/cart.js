@@ -1,4 +1,11 @@
-import { getLocalStorage, setLocalStorage, qs, renderListWithTemplate, loadHeaderFooter, updateCartCount } from "./utils.mjs";
+import {
+  getLocalStorage,
+  setLocalStorage,
+  qs,
+  renderListWithTemplate,
+  loadHeaderFooter,
+  updateCartCount,
+} from "./utils.mjs";
 
 loadHeaderFooter();
 
@@ -11,7 +18,13 @@ function renderCartContents() {
   // 2. Render items using your utility function (or clear the list if empty)
   if (productListEl) {
     if (cartItems.length > 0) {
-      renderListWithTemplate(cartItemTemplate, productListEl, cartItems, "afterbegin", true);
+      renderListWithTemplate(
+        cartItemTemplate,
+        productListEl,
+        cartItems,
+        "afterbegin",
+        true,
+      );
     } else {
       productListEl.innerHTML = "";
     }
@@ -22,7 +35,10 @@ function renderCartContents() {
   const cartTotal = qs(".cart-total");
 
   if (cartItems.length > 0) {
-    const total = cartItems.reduce((sum, item) => sum + Number(item.FinalPrice || 0), 0);
+    const total = cartItems.reduce(
+      (sum, item) => sum + Number(item.FinalPrice || 0),
+      0,
+    );
 
     if (cartTotal) {
       cartTotal.textContent = `Total: $${total.toFixed(2)}`;
@@ -42,11 +58,12 @@ function renderCartContents() {
       const productId = event.target.dataset.id;
       removeFromCart(productId);
     });
-  });    
+  });
 }
 
 function cartItemTemplate(item) {
-  const colorName = item.Colors && item.Colors[0] ? item.Colors[0].ColorName : "";
+  const colorName =
+    item.Colors && item.Colors[0] ? item.Colors[0].ColorName : "";
 
   return `<li class="cart-card divider">
     <a href="#" class="cart-card__image">

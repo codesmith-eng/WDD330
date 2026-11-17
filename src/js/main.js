@@ -22,7 +22,6 @@ searchForm?.addEventListener("submit", (e) => {
   console.log("Searching:", searchTerm);
 
   if (searchTerm) {
-    window.location.href =
-      `/product_listing/index.html?search=${encodeURIComponent(searchTerm)}`;
+    window.location.href = `/product_listing/index.html?search=${encodeURIComponent(searchTerm)}`;
   }
 });

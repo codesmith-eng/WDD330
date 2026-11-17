@@ -5,11 +5,7 @@ const dataSource = new ProductData("tents");
 
 const listElement = document.querySelector(".product-list");
 
-const productList = new ProductList(
-  "tents",
-  dataSource,
-  listElement
-);
+const productList = new ProductList("tents", dataSource, listElement);
 
 const searchTerm =
   new URLSearchParams(window.location.search).get("search") || "";
