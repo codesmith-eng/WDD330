@@ -246,6 +246,10 @@ button {
   margin-bottom: 0.5em;
 }
 
+#p-brand,
+#p-name,
+#p-color,
+#p-description,
 #p-price {
   font-size: 1.5em;
   color: var(--secondary-color);
