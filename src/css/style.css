@@ -119,6 +119,10 @@ button {
   border-bottom: 1px solid var(--primary-color);
 }
 
+.hide {
+  display: none;
+}
+
 /* End utility classes */
 
 /* Cart icon styles */
@@ -134,6 +138,23 @@ button {
 
 .cart:hover svg {
   fill: gray;
+}
+
+.cart-count {
+  position: absolute;
+  top: 4px;
+  right: -6px;
+  background-color: var(--primary-color);
+  color: var(--dark-grey);
+  font-size: 0.75rem;
+  font-weight: bold;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
 }
 
 /* End cart icon styles */
@@ -236,18 +257,39 @@ button {
   text-align: center;
   background-color: var(--dark-grey);
   color: #fff;
+  margin-bottom: 0.5em;
 }
 
 .product-detail img {
   width: 100%;
 }
 
-.product-detail h2 {
-  margin-bottom: 0.5em;
-}
-
 #p-price {
   font-size: 1.5em;
+  color: var(--secondary-color);
+}
+
+.discount-flag {
+  display: inline-block;
+  background-color: var(--tertiary-color);
+  color: #ffffff;
+  font-size: 0.85rem;
+  font-weight: bold;
+  padding: 0.3em 0.7em;
+  border-radius: 4px;
+  margin-right: 0.5rem;
+  vertical-align: middle;
+}
+
+.original-price {
+  text-decoration: line-through;
+  color: #777777;
+  font-size: 1rem;
+  margin-right: 0.5rem;
+}
+
+.final-price {
+  font-weight: bold;
   color: var(--secondary-color);
 }
 
@@ -256,7 +298,6 @@ button {
   display: grid;
   grid-template-columns: 25% auto 15%;
   font-size: var(--small-font);
-  /* max-height: 120px; */
   align-items: center;
 }
 
@@ -286,7 +327,6 @@ button {
 
 .cart-card__price {
   grid-row: 2;
-
   grid-column: 3;
 }
 

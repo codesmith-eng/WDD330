@@ -1,5 +1,8 @@
-const baseURL =
+const rawBaseURL =
   import.meta.env.VITE_SERVER_URL || "https://onrender.com";
+
+// Ensures baseURL always ends with a single trailing slash
+const baseURL = rawBaseURL.endsWith("/") ? rawBaseURL : `${rawBaseURL}/`;
 
 async function convertToJson(res) {
   const contentType = res.headers.get("content-type");

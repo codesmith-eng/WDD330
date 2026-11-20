@@ -52,6 +52,19 @@ export function renderWithTemplate(template, parentElement, data, callback) {
   }
 }
 
+export function updateCartCount() {
+  const cartItems = getLocalStorage("so-cart") || [];
+  const totalCount = cartItems.reduce(
+    (sum, item) => sum + (item.quantity || 1),
+    0
+  );
+  const countElement = qs(".cart-count");
+  if (countElement) {
+    countElement.textContent = totalCount > 0 ? totalCount : "";
+    countElement.style.display = totalCount > 0 ? "flex" : "none";
+  }
+}
+
 async function loadTemplate(path) {
   const res = await fetch(path);
   const template = await res.text();
@@ -67,4 +80,5 @@ export async function loadHeaderFooter() {
 
   renderWithTemplate(headerTemplate, headerElement);
   renderWithTemplate(footerTemplate, footerElement);
+  updateCartCount();
 }
