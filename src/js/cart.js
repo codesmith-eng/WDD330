@@ -1,4 +1,5 @@
-import { getLocalStorage, loadHeaderFooter } from "./utils.mjs";
+import { loadHeaderFooter } from "./utils.mjs";
+import ShoppingCart from "./ShoppingCart.mjs";
 
 loadHeaderFooter();
 
@@ -14,7 +15,7 @@ function cartItemTemplate(item) {
     <img
       src="${item.Image}"
       alt="${item.Name}"
-   >
+    />
   </a>
   <a href="#">
     <h2 class="card__name">${item.Name}</h2>
