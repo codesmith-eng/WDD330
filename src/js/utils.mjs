@@ -65,6 +65,21 @@ export function updateCartCount() {
   }
 }
 
+// play a short bounce animation on the cart icon in the header
+export function animateCart() {
+  const cartIcon = qs(".cart");
+  // the header loads asynchronously, so the icon may not exist yet
+  if (!cartIcon) return;
+
+  // remove the class first so the animation can replay on repeated clicks
+  cartIcon.classList.remove("cart--adding");
+  // reading offsetWidth forces a reflow, which commits the removal before
+  // the class is added back. Without it the browser batches both changes
+  // into one frame and the animation never restarts.
+  void cartIcon.offsetWidth;
+  cartIcon.classList.add("cart--adding");
+}
+
 async function loadTemplate(path) {
   const res = await fetch(path);
   const template = await res.text();
