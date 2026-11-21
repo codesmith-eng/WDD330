@@ -20,9 +20,17 @@ export default class ProductDetails {
       .addEventListener("click", this.addProductToCart.bind(this));
   }
 
-  addProductToCart() {
+    addProductToCart() {
     const cartItems = getLocalStorage("so-cart") || [];
-    cartItems.push(this.product);
+    const existingItem = cartItems.find((item) => item.Id === this.product.Id);
+
+    if (existingItem) {
+      // the product is already in the cart, so bump its quantity
+      existingItem.quantity = (existingItem.quantity || 1) + 1;
+    } else {
+      cartItems.push({ ...this.product, quantity: 1 });
+    }
+
     setLocalStorage("so-cart", cartItems);
     updateCartCount();
     animateCart();
