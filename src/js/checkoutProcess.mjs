@@ -4,18 +4,18 @@ import ExternalServices from "./ExternalServices.mjs";
 const services = new ExternalServices();
 
 function formDataToJSON(formElement) {
+  // convert the form data to a JSON object
   const formData = new FormData(formElement);
   const convertedJSON = {};
-
   formData.forEach((value, key) => {
     convertedJSON[key] = value;
   });
-
   return convertedJSON;
 }
 
 function packageItems(items) {
-  return items.map((item) => {
+  const simplifiedItems = items.map((item) => {
+    console.log(item);
     return {
       id: item.Id,
       price: item.FinalPrice,
@@ -23,6 +23,7 @@ function packageItems(items) {
       quantity: 1,
     };
   });
+  return simplifiedItems;
 }
 
 export default class CheckoutProcess {
@@ -37,74 +38,65 @@ export default class CheckoutProcess {
   }
 
   init() {
-    this.list = getLocalStorage(this.key) || [];
-    this.calculateItemSubTotal();
+    this.list = getLocalStorage(this.key);
+    this.calculateItemSummary();
   }
 
-  calculateItemSubTotal() {
-    this.itemTotal = this.list.reduce(
-      (total, item) =>
-        total + Number(item.FinalPrice) * (item.quantity || 1),
-      0
+  calculateItemSummary() {
+    // calculate and display the total amount of the items in the cart, and the number of items.
+    const summaryElement = document.querySelector(
+      this.outputSelector + " #cartTotal"
     );
-
-    const itemCount = document.querySelector(
-      `${this.outputSelector} #numberItems`
+    const itemNumElement = document.querySelector(
+      this.outputSelector + " #num-items"
     );
-
-    const cartTotal = document.querySelector(
-      `${this.outputSelector} #cartTotal`
-    );
-
-    const totalItems = this.list.reduce(
-      (sum, item) => sum + (item.quantity || 1),
-      0
-    );
-
-    if (itemCount) {
-      itemCount.textContent = totalItems;
-    }
-
-    if (cartTotal) {
-      cartTotal.textContent = `$${this.itemTotal.toFixed(2)}`;
-    }
+    itemNumElement.innerText = this.list.length;
+    // calculate the total of all the items in the cart
+    const amounts = this.list.map((item) => item.FinalPrice);
+    this.itemTotal = amounts.reduce((sum, item) => sum + item);
+    summaryElement.innerText = `$${this.itemTotal}`;;
   }
 
   calculateOrderTotal() {
-    this.tax = this.itemTotal * 0.06;
-
-    this.shipping = this.list.length
-      ? 10 + (this.list.length - 1) * 2
-      : 0;
-
-    this.orderTotal = this.itemTotal + this.tax + this.shipping;
-
+    // calculate the shipping and tax amounts. Then use them to along with the cart total to figure out the order total
+    this.tax = (this.itemTotal * .06);
+    this.shipping = 10 + (this.list.length - 1) * 2;
+    this.orderTotal = (
+      parseFloat(this.itemTotal) +
+      parseFloat(this.tax) +
+      parseFloat(this.shipping)
+    )
+    // display the totals.
     this.displayOrderTotals();
   }
 
   displayOrderTotals() {
-    const taxElement = document.querySelector(
-      `${this.outputSelector} #tax`
-    );
+    // once the totals are all calculated display them in the order summary page
+    const tax = document.querySelector(`${this.outputSelector} #tax`);
+    const shipping = document.querySelector(`${this.outputSelector} #shipping`);
+    const orderTotal = document.querySelector(`${this.outputSelector} #orderTotal`);
 
-    const shippingElement = document.querySelector(
-      `${this.outputSelector} #shipping`
-    );
+    tax.innerText = `$${this.tax.toFixed(2)}`;
+    shipping.innerText = `$${this.shipping.toFixed(2)}`;
+    orderTotal.innerText = `$${this.orderTotal.toFixed(2)}`;
+  }
 
-    const totalElement = document.querySelector(
-      `${this.outputSelector} #total`
-    );
+  async checkout() {
+    const formElement = document.forms["checkout"];
+    const order = formDataToJSON(formElement);
 
-    if (taxElement) {
-      taxElement.textContent = `$${this.tax.toFixed(2)}`;
-    }
+    order.orderDate = new Date().toISOString();
+    order.orderTotal = this.orderTotal;
+    order.tax = this.tax;
+    order.shipping = this.shipping;
+    order.items = packageItems(this.list);
+    //console.log(order);
 
-    if (shippingElement) {
-      shippingElement.textContent = `$${this.shipping.toFixed(2)}`;
-    }
-
-    if (totalElement) {
-      totalElement.textContent = `$${this.orderTotal.toFixed(2)}`;
+    try {
+      const response = await services.checkout(order);
+      console.log(response);
+    } catch (err) {
+      console.log(err);
     }
   }
 }

@@ -1,10 +1,11 @@
 import { loadHeaderFooter, getLocalStorage } from "./utils.mjs";
-import ShoppingCart from "./ShoppingCart.mjs";
+//import ShoppingCart from "./ShoppingCart.mjs";
 
 loadHeaderFooter();
 
 function renderCartContents() {
   const cartItems = getLocalStorage("so-cart") || [];
+  console.log(cartItems);
   const htmlItems = cartItems.map((item) => cartItemTemplate(item));
   document.querySelector(".product-list").innerHTML = htmlItems.join("");
 

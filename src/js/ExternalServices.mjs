@@ -1,35 +1,59 @@
 const rawBaseURL =
-  import.meta.env.VITE_SERVER_URL || "https://onrender.com";
+  import.meta.env.VITE_SERVER_URL ||
+  "https://wdd330-backend.onrender.com/";
 
-// Ensures baseURL always ends with a single trailing slash
-const baseURL = rawBaseURL.endsWith("/") ? rawBaseURL : `${rawBaseURL}/`;
+const baseURL = rawBaseURL.endsWith("/")
+  ? rawBaseURL
+  : `${rawBaseURL}/`;
 
-async function convertToJson(res) {
-  const contentType = res.headers.get("content-type");
-  if (res.ok && contentType && contentType.includes("application/json")) {
-    return res.json();
-  } else {
-    const text = await res.text();
-    throw new Error(`Bad Response (${res.status}): ${text.slice(0, 100)}`);
+async function convertToJson(response) {
+  const contentType = response.headers.get("content-type");
+
+  if (
+    response.ok &&
+    contentType &&
+    contentType.includes("application/json")
+  ) {
+    return response.json();
   }
+
+  const errorText = await response.text();
+  throw new Error(
+    `Bad Response (${response.status}): ${errorText}`
+  );
 }
 
-export default class ProductData {
-  constructor() {
-    // this.category = category;
-    // this.path = `../public/json/${this.category}.json`;
-  }
+export default class ExternalServices {
   async getData(category) {
-    const response = await fetch(`${baseURL}products/search/${category}`);
-    const data = await convertToJson(response);
+    const response = await fetch(
+      `${baseURL}products/search/${category}`
+    );
 
+    const data = await convertToJson(response);
     return data.Result;
   }
 
   async findProductById(id) {
-    const response = await fetch(`${baseURL}product/${id}`);
+    const response = await fetch(
+      `${baseURL}product/${id}`
+    );
+
     const data = await convertToJson(response);
-    console.log(data.Result);
     return data.Result;
+  }
+
+  async checkout(order) {
+    const response = await fetch(
+      `${baseURL}checkout/`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(order),
+      }
+    );
+
+    return convertToJson(response);
   }
 }
