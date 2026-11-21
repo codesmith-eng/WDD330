@@ -1,7 +1,6 @@
-import { getLocalStorage, setLocalStorage } from "./utils.mjs";
+import { getLocalStorage, setLocalStorage, updateCartCount } from "./utils.mjs";
 
 export default class ProductDetails {
-
   constructor(productId, dataSource) {
     this.productId = productId;
     this.product = {};
@@ -9,7 +8,6 @@ export default class ProductDetails {
   }
 
   async init() {
-    // use the datasource to get the details for the current product. findProductById will return a promise! use await or .then() to process it
     this.product = await this.dataSource.findProductById(this.productId);
     // the product details are needed before rendering the HTML 
     this.product;     
@@ -26,6 +24,7 @@ export default class ProductDetails {
     const cartItems = getLocalStorage("so-cart") || [];
     cartItems.push(this.product);
     setLocalStorage("so-cart", cartItems);
+    updateCartCount();
   }
 
   renderProductDetails() {
@@ -33,21 +32,43 @@ export default class ProductDetails {
   }
 }
 
+function formatEuro(amount) {
+  return new Intl.NumberFormat("de-DE", {
+    style: "currency",
+    currency: "EUR",
+  }).format(Number(amount) * 0.85);
+}
+
 function productDetailsTemplate(product) {
-  document.querySelector("h2").textContent = product.Category.charAt(0).toUpperCase() + product.Category.slice(1);
+  document.querySelector("h2").textContent =
+    product.Category.charAt(0).toUpperCase() + product.Category.slice(1);
   document.querySelector("#p-brand").textContent = product.Brand.Name;
   document.querySelector("#p-name").textContent = product.NameWithoutBrand;
 
   const productImage = document.querySelector("#p-image");
   productImage.src = product.Images.PrimaryExtraLarge;
   productImage.alt = product.NameWithoutBrand;
-  const euroPrice = new Intl.NumberFormat('de-DE',
-    {
-      style: 'currency', currency: 'EUR',
-    }).format(Number(product.FinalPrice) * 0.85);
-  document.querySelector("#p-price").textContent = `${euroPrice}`;
+
+  const finalPrice = Number(product.FinalPrice);
+  const retailPrice = Number(product.SuggestedRetailPrice);
+  const priceElement = document.querySelector("#p-price");
+
+  if (retailPrice > finalPrice) {
+    const discountAmount = retailPrice - finalPrice;
+    const discountPercent = Math.round((discountAmount / retailPrice) * 100);
+
+    priceElement.innerHTML = `
+      <span class="discount-flag">Save ${formatEuro(discountAmount)} (${discountPercent}% OFF)</span>
+      <span class="original-price">${formatEuro(retailPrice)}</span>
+      <span class="final-price">${formatEuro(finalPrice)}</span>
+    `;
+  } else {
+    priceElement.textContent = formatEuro(finalPrice);
+  }
+
   document.querySelector("#p-color").textContent = product.Colors[0].ColorName;
-  document.querySelector("#p-description").innerHTML = product.DescriptionHtmlSimple;
+  document.querySelector("#p-description").innerHTML =
+    product.DescriptionHtmlSimple;
 
   document.querySelector("#add-to-cart").dataset.Id = product.Id;
 }
