@@ -1,4 +1,4 @@
-import { getLocalStorage } from "./utils.mjs";
+import { getLocalStorage,  alertMessage } from "./utils.mjs";
 import ExternalServices from "./ExternalServices.mjs";
 
 const services = new ExternalServices();
@@ -20,7 +20,7 @@ function packageItems(items) {
       id: item.Id,
       price: item.FinalPrice,
       name: item.Name,
-      quantity: 1,
+      quantity: item.quantity || 1,
     };
   });
   return simplifiedItems;
@@ -81,6 +81,7 @@ export default class CheckoutProcess {
     orderTotal.innerText = `$${this.orderTotal.toFixed(2)}`;
   }
 
+
   async checkout() {
     const formElement = document.forms["checkout"];
     const order = formDataToJSON(formElement);
@@ -95,8 +96,16 @@ export default class CheckoutProcess {
     try {
       const response = await services.checkout(order);
       console.log(response);
+      // clear cart
+      localStorage.removeItem(this.key);
+
+      // redirect to success page
+      window.location.href = "/checkout/success.html";
     } catch (err) {
       console.log(err);
+      alertMessage(
+        Object.values(err.message).join("<br>")
+      );
     }
   }
 }

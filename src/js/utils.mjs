@@ -82,3 +82,31 @@ export async function loadHeaderFooter() {
   renderWithTemplate(footerTemplate, footerElement);
   updateCartCount();
 }
+
+export function alertMessage(message, scroll = true) {
+  const alert = document.createElement("div");
+
+  alert.classList.add("alert");
+
+  alert.innerHTML = `
+    <p>${message}</p>
+    <span class="close-alert">X</span>
+  `;
+
+  const main = document.querySelector("main");
+
+  main.prepend(alert);
+
+  alert
+    .querySelector(".close-alert")
+    .addEventListener("click", () => {
+      alert.remove();
+    });
+
+  if (scroll) {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  }
+}
