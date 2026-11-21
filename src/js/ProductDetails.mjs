@@ -9,7 +9,12 @@ export default class ProductDetails {
 
   async init() {
     this.product = await this.dataSource.findProductById(this.productId);
+    // the product details are needed before rendering the HTML 
+    this.product;     
     this.renderProductDetails();
+    
+    // once the HTML is rendered, add a listener to the Add to Cart button
+    // Notice the .bind(this). This callback will not work if the bind(this) is missing. Review the readings from this week on "this" to understand why.
     document
       .getElementById("add-to-cart")
       .addEventListener("click", this.addProductToCart.bind(this));
@@ -65,8 +70,10 @@ function productDetailsTemplate(product) {
   document.querySelector("#p-description").innerHTML =
     product.DescriptionHtmlSimple;
 
-  document.querySelector("#add-to-cart").dataset.id = product.Id;
+  document.querySelector("#add-to-cart").dataset.Id = product.Id;
 }
+
+
 
 // ************* Alternative Display Product Details Method *******************
 // function productDetailsTemplate(product) {
