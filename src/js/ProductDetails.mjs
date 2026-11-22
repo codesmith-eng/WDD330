@@ -46,7 +46,9 @@ function productDetailsTemplate(product) {
   document.querySelector("#p-name").textContent = product.NameWithoutBrand;
 
   const productImage = document.querySelector("#p-image");
-  productImage.src = product.Images.PrimaryExtraLarge;
+  productImage.src = product.Images.PrimaryLarge;
+  productImage.srcset = `${product.Images.PrimaryMedium} 160w, ${product.Images.PrimaryLarge} 320w, ${product.Images.PrimaryExtraLarge} 600w`;
+  productImage.sizes = "(min-width: 1200px) 450px, (min-width: 560px) 45vw, 214px";
   productImage.alt = product.NameWithoutBrand;
 
   const finalPrice = Number(product.FinalPrice);
