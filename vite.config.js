@@ -15,6 +15,7 @@ export default defineConfig({
 
         // Include the product listing page in the build.
         productListing: resolve(__dirname, "src/product_listing/index.html"),
+        success: resolve(__dirname, "src/checkout/success.html"),
       },
     },
   },
