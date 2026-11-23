@@ -29,6 +29,7 @@ export default class ProductDetails {
     false
     );
     updateCartCount();
+    animateCart();
   }
 
   renderProductDetails() {
