@@ -6,7 +6,7 @@ const baseURL = rawBaseURL.endsWith("/")
   ? rawBaseURL
   : `${rawBaseURL}/`;
 
-async function convertToJson(response) {
+/*async function convertToJson(response) {
   const contentType = response.headers.get("content-type");
 
   if (
@@ -21,6 +21,19 @@ async function convertToJson(response) {
   throw new Error(
     `Bad Response (${response.status}): ${errorText}`
   );
+}*/
+
+async function convertToJson(response) {
+  const jsonResponse = await response.json();
+
+  if (response.ok) {
+    return jsonResponse;
+  }
+
+  throw {
+    name: "servicesError",
+    message: jsonResponse,
+  };
 }
 
 export default class ExternalServices {
