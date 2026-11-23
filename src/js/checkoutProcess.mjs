@@ -13,6 +13,11 @@ function formDataToJSON(formElement) {
   return convertedJSON;
 }
 
+// count total units in the cart, not rows: one row can hold several units
+function countUnits(list) {
+  return list.reduce((sum, item) => sum + (item.quantity || 1), 0);
+}
+
 function packageItems(items) {
   const simplifiedItems = items.map((item) => {
     console.log(item);
@@ -31,6 +36,7 @@ export default class CheckoutProcess {
     this.key = key;
     this.outputSelector = outputSelector;
     this.list = [];
+    this.itemCount = 0;
     this.itemTotal = 0;
     this.shipping = 0;
     this.tax = 0;
@@ -38,7 +44,7 @@ export default class CheckoutProcess {
   }
 
   init() {
-    this.list = getLocalStorage(this.key);
+    this.list = getLocalStorage(this.key) || [];
     this.calculateItemSummary();
   }
 
@@ -50,22 +56,25 @@ export default class CheckoutProcess {
     const itemNumElement = document.querySelector(
       this.outputSelector + " #num-items"
     );
-    itemNumElement.innerText = this.list.length;
-    // calculate the total of all the items in the cart
-    const amounts = this.list.map((item) => item.FinalPrice);
-    this.itemTotal = amounts.reduce((sum, item) => sum + item);
-    summaryElement.innerText = `$${this.itemTotal}`;;
+
+    this.itemCount = countUnits(this.list);
+    itemNumElement.innerText = this.itemCount;
+
+    // multiply each price by its quantity before summing
+    this.itemTotal = this.list.reduce(
+      (sum, item) => sum + Number(item.FinalPrice) * (item.quantity || 1),
+      0
+    );
+    summaryElement.innerText = `$${this.itemTotal.toFixed(2)}`;
   }
 
   calculateOrderTotal() {
     // calculate the shipping and tax amounts. Then use them to along with the cart total to figure out the order total
-    this.tax = (this.itemTotal * .06);
-    this.shipping = 10 + (this.list.length - 1) * 2;
-    this.orderTotal = (
-      parseFloat(this.itemTotal) +
-      parseFloat(this.tax) +
-      parseFloat(this.shipping)
-    )
+    this.tax = this.itemTotal * 0.06;
+    // $10 for the first unit plus $2 for each additional unit
+    this.shipping = this.itemCount > 0 ? 10 + (this.itemCount - 1) * 2 : 0;
+    this.orderTotal = this.itemTotal + this.tax + this.shipping;
+
     // display the totals.
     this.displayOrderTotals();
   }
@@ -74,7 +83,9 @@ export default class CheckoutProcess {
     // once the totals are all calculated display them in the order summary page
     const tax = document.querySelector(`${this.outputSelector} #tax`);
     const shipping = document.querySelector(`${this.outputSelector} #shipping`);
-    const orderTotal = document.querySelector(`${this.outputSelector} #orderTotal`);
+    const orderTotal = document.querySelector(
+      `${this.outputSelector} #orderTotal`
+    );
 
     tax.innerText = `$${this.tax.toFixed(2)}`;
     shipping.innerText = `$${this.shipping.toFixed(2)}`;
@@ -91,7 +102,6 @@ export default class CheckoutProcess {
     order.tax = this.tax;
     order.shipping = this.shipping;
     order.items = packageItems(this.list);
-    //console.log(order);
 
     try {
       const response = await services.checkout(order);
