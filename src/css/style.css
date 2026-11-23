@@ -90,7 +90,7 @@ p {
   margin-top: -1.3em;
 }
 
-.logo--square > div {
+.logo--square>div {
   margin-top: -1.7em;
 }
 
@@ -338,6 +338,51 @@ button {
   grid-column: 3;
 }
 
+.newsletter {
+  text-align: center;
+
+  h2 {
+    margin-top: 2em;
+  }
+
+  p {
+    font-size: 1.2em;
+  }
+
+  label {
+    font-size: 1.2em;
+    font-weight: 600;
+  }
+
+  input {
+    width: 60%;
+    padding: .5em;
+    font-size: 1.2em;
+    border-radius: 5px;
+    border: 3px solid black;
+    margin-bottom: 1.5em;
+  }
+
+  input:focus {
+    border-bottom: 10px solid rgb(224, 101, 101);
+  }
+
+  button {
+    display: block;
+    margin: 0 auto;
+    border-radius: .5em;
+  }
+
+  button:hover {
+    cursor: pointer;
+    background-color: black;
+  }
+
+  #newsletter-message{
+    padding: 1.5em;
+  }
+}
+
 @media screen and (min-width: 500px) {
   body {
     max-width: 1080px;
@@ -359,6 +404,7 @@ footer {
   border-top: 1px solid var(--tertiary-color);
   padding: 1em;
 }
+
 /* ===== Cart icon animation on add to cart ===== */
 
 .cart svg {
@@ -369,15 +415,19 @@ footer {
   0% {
     transform: scale(1) translateY(0);
   }
+
   30% {
     transform: scale(1.25) translateY(-6px);
   }
+
   55% {
     transform: scale(0.92) translateY(2px);
   }
+
   78% {
     transform: scale(1.08) translateY(-2px);
   }
+
   100% {
     transform: scale(1) translateY(0);
   }
@@ -387,9 +437,11 @@ footer {
   0% {
     transform: scale(1);
   }
+
   40% {
     transform: scale(1.6);
   }
+
   100% {
     transform: scale(1);
   }
@@ -405,6 +457,7 @@ footer {
 
 /* Respect users who prefer less motion */
 @media (prefers-reduced-motion: reduce) {
+
   .cart--adding svg,
   .cart--adding .cart-count {
     animation: none;
