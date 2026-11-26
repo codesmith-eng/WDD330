@@ -31,7 +31,7 @@ export default class CheckoutProcess {
     this.key = key;
     this.outputSelector = outputSelector;
     this.list = [];
-    this.itemTotal = 0;
+        this.itemTotal = 0;
     this.shipping = 0;
     this.tax = 0;
     this.orderTotal = 0;
@@ -90,13 +90,13 @@ export default class CheckoutProcess {
     order.tax = this.tax;
     order.shipping = this.shipping;
     order.items = packageItems(this.list);
-    //console.log(order);
+//console.log(order);
 
     try {
       const response = await services.checkout(order);
       console.log(response);
-    } catch (err) {
+          } catch (err) {
       console.log(err);
-    }
+          }
   }
 }
