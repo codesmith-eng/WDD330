@@ -74,7 +74,7 @@ export default class CheckoutProcess {
     // once the totals are all calculated display them in the order summary page
     const tax = document.querySelector(`${this.outputSelector} #tax`);
     const shipping = document.querySelector(`${this.outputSelector} #shipping`);
-    const orderTotal = document.querySelector(      `${this.outputSelector} #orderTotal`    );
+    const orderTotal = document.querySelector(`${this.outputSelector} #orderTotal`);
 
     tax.innerText = `$${this.tax.toFixed(2)}`;
     shipping.innerText = `$${this.shipping.toFixed(2)}`;
